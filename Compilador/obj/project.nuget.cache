@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "xpPoEDf9z5c=",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\OneDrive\\Documentos\\Proyectos visual studio\\Compilador\\Compilador.csproj",
+=======
+  "dgSpecHash": "NotAxTTgeMM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\Compilador.csproj",
+>>>>>>> 378466c7ed9d0ac7d5b46e82a6c02367cdea7179
   "expectedPackageFiles": [],
   "logs": []
 }

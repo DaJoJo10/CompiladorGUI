@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\Admin\\OneDrive\\Documentos\\Proyectos visual studio\\Compilador\\Compilador.csproj": {}
   },
   "projects": {
@@ -12,12 +13,29 @@
         "projectPath": "C:\\Users\\Admin\\OneDrive\\Documentos\\Proyectos visual studio\\Compilador\\Compilador.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Admin\\OneDrive\\Documentos\\Proyectos visual studio\\Compilador\\obj\\",
+=======
+    "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\Compilador.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\Compilador.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\Compilador.csproj",
+        "projectName": "Compilador",
+        "projectPath": "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\Compilador.csproj",
+        "packagesPath": "C:\\Users\\leona\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leona\\Source\\Repos\\CompiladorGUI\\Compilador\\obj\\",
+>>>>>>> 378466c7ed9d0ac7d5b46e82a6c02367cdea7179
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\leona\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> 378466c7ed9d0ac7d5b46e82a6c02367cdea7179
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +62,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
+<<<<<<< HEAD
         "SdkAnalysisLevel": "9.0.200"
+=======
+        "SdkAnalysisLevel": "9.0.300"
+>>>>>>> 378466c7ed9d0ac7d5b46e82a6c02367cdea7179
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -68,7 +90,11 @@
               "privateAssets": "none"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+>>>>>>> 378466c7ed9d0ac7d5b46e82a6c02367cdea7179
         }
       }
     }
