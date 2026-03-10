@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Compilador.UI.FORMS;
 
 namespace Compilador.UI.Forms
 {
@@ -196,6 +197,16 @@ namespace Compilador.UI.Forms
             }
         }
 
-       
+        private void btnCompilar_Click(object sender, EventArgs e)
+        {
+            txtTokens.Clear();
+            txtEstatus.Clear();
+
+            // Mensaje inicial
+            txtEstatus.AppendText("Ha iniciado el léxico" + Environment.NewLine);
+
+            // 1. Obtener el texto de la text area
+            var fuente = CodigoFuente.DesdeTexto(txtEditor.Text);
+        }
     }
 }
