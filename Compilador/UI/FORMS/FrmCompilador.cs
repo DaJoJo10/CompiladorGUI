@@ -205,8 +205,22 @@ namespace Compilador.UI.Forms
             // Mensaje inicial
             txtEstatus.AppendText("Ha iniciado el léxico" + Environment.NewLine);
 
-            // 1. Obtener el texto de la text area
+            // Obtener el texto del editor
             var fuente = CodigoFuente.DesdeTexto(txtEditor.Text);
+            var analizador = new AnalizadorLexico();
+            var resultado = analizador.Analizar(fuente);
+
+            // Mostrar tokens en txtTokens
+            foreach (var token in resultado.Tokens)
+            {
+                txtTokens.AppendText($"Token: {token.Tipo} | Lexema: {token.Lexema} | Línea: {token.Linea}" + Environment.NewLine);
+            }
+
+            // Mostrar avisos en txtEstatus
+            foreach (var aviso in resultado.Avisos)
+            {
+                txtEstatus.AppendText(aviso + Environment.NewLine);
+            }
         }
     }
 }
