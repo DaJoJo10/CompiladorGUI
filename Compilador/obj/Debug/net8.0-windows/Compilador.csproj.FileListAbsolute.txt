@@ -53,3 +53,22 @@ C:\Users\leona\Source\Repos\CompiladorGUI\Compilador\obj\Debug\net8.0-windows\re
 C:\Users\leona\Source\Repos\CompiladorGUI\Compilador\obj\Debug\net8.0-windows\Compilador.pdb
 C:\Users\leona\Source\Repos\CompiladorGUI\Compilador\obj\Debug\net8.0-windows\Compilador.genruntimeconfig.cache
 C:\Users\leona\Source\Repos\CompiladorGUI\Compilador\obj\Debug\net8.0-windows\ref\Compilador.dll
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\bin\Debug\net8.0-windows\Compilador.exe
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\bin\Debug\net8.0-windows\Compilador.deps.json
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\bin\Debug\net8.0-windows\Compilador.runtimeconfig.json
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\bin\Debug\net8.0-windows\Compilador.dll
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\bin\Debug\net8.0-windows\Compilador.pdb
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.frmCompilador.resources
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.Properties.Resources.resources
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.UI.Forms.FrmCompilador.resources
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.csproj.GenerateResource.cache
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.AssemblyInfoInputs.cache
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.AssemblyInfo.cs
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.csproj.CoreCompileInputs.cache
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.sourcelink.json
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.dll
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\refint\Compilador.dll
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.pdb
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\Compilador.genruntimeconfig.cache
+C:\Users\Admin\OneDrive\Documentos\Proyectos visual studio\Compilador\obj\Debug\net8.0-windows\ref\Compilador.dll

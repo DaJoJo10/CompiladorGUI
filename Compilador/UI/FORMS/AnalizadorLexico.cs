@@ -73,7 +73,7 @@ namespace Compilador.UI.FORMS
                     // Fin de ID / palabra reservada
                     string lex = lexema.ToString();
                     token = _palabrasReservadas.ObtenerToken(lex);
-                    resultado.Tokens.Add(new Token(token, lex, numLinea));
+                    resultado.Tokens.Add(new Token(token, lex, numLinea, 0, token >= 102 && token <= 110 ? lex : "", 0, 0, ""));
                     Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
                     lexema.Clear();
                     estado = 0;
@@ -84,11 +84,48 @@ namespace Compilador.UI.FORMS
                     // Fin de número entero
                     string lex = lexema.ToString();
                     token = 200;
-                    resultado.Tokens.Add(new Token(token, lex, numLinea));
+                    resultado.Tokens.Add(new Token(token, lex, numLinea, 0, "", int.Parse(lex), 0, ""));
                     Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
                     lexema.Clear();
                     estado = 0;
                     i--; // reprocesar el mismo carácter en el estado 0
+                }
+                else if (valorMatriz == 300)
+                {
+                    // Fin de número real
+                    string lex = lexema.ToString();
+                    token = 300;
+                    resultado.Tokens.Add(new Token(token, lex, numLinea, 0, "", 0, (int)float.Parse(lex), ""));
+                    Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
+                    lexema.Clear();
+                    estado = 0;
+                    i--;
+                }
+                else if (valorMatriz == 400)
+                {
+                    // Fin de operador
+                    string lex = lexema.ToString();
+                    if (string.IsNullOrEmpty(lex))
+                        lex = c.ToString();
+                    token = _palabrasReservadas.ObtenerToken(lex);
+                    resultado.Tokens.Add(new Token(token, lex, numLinea, 0, "", 0, 0, lex));
+                    Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
+                    lexema.Clear();
+                    estado = 0;
+                    i--;
+                }
+                else if (valorMatriz == 500)
+                {
+                    // Fin de separador
+                    string lex = lexema.ToString();
+                    if (string.IsNullOrEmpty(lex))
+                        lex = c.ToString();
+                    token = _palabrasReservadas.ObtenerToken(lex);
+                    resultado.Tokens.Add(new Token(token, lex, numLinea, 0, "", 0, 0, lex));
+                    Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
+                    lexema.Clear();
+                    estado = 0;
+                    i--;
                 }
                 else if (valorMatriz > 500)
                 {

@@ -12,11 +12,27 @@ namespace Compilador.UI.FORMS
         public string Lexema { get; }
         public int Linea { get; }
 
-        public Token(int tipo, string lexema, int linea)
+        public int Id { get; }
+
+        public string PalabraReservada { get; }
+
+        public int NumeroEntero { get; }
+
+        public int NumeroReal { get; }
+
+        public string Simbolos {  get; }
+
+        public Token(int tipo, string lexema, int linea, int id, string palabraReservada, int numeroEntero, int numeroReal, string simbolos)
         {
             Tipo = tipo;
             Lexema = lexema;
             Linea = linea;
+            Id = id;
+            PalabraReservada = palabraReservada;
+            NumeroEntero = numeroEntero;
+            NumeroReal = numeroReal;
+            Simbolos = simbolos;
+
         }
 
         public override string ToString()
