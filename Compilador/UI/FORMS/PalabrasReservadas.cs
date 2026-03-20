@@ -16,19 +16,17 @@ namespace Compilador.UI.FORMS
         { "IF",      105 },
         { "THEN",    106 },
         { "ELSE",    107 },
-        { "WHILE",   108 }
+        { "WHILE",   108 },
+        { "PRINT",   109 },
+        { "INT",     110 }   // ← nuevo
     };
 
-        // 101 será el token para ID, PALABRAS, IDENTIFICADORES, VARIABLES
         public int ObtenerToken(string lexema)
         {
-            if (string.IsNullOrWhiteSpace(lexema))
-                return 101;
-
-            var clave = lexema.ToUpperInvariant();
-            return _mapa.TryGetValue(clave, out int token)
+            if (string.IsNullOrWhiteSpace(lexema)) return 101;
+            return _mapa.TryGetValue(lexema.ToUpperInvariant(), out int token)
                 ? token
-                : 101; // identificador
+                : 101;
         }
     }
 }

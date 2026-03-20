@@ -15,5 +15,5 @@ namespace Compilador.UI.FORMS
         {
             Avisos.Add(mensaje);
         }
-    }
+    } 
 }
