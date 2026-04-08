@@ -199,28 +199,94 @@ namespace Compilador.UI.Forms
 
         private void btnCompilar_Click(object sender, EventArgs e)
         {
-            txtTokens.Clear();
-            txtEstatus.Clear();
-
-            // Mensaje inicial
-            txtEstatus.AppendText("Ha iniciado el léxico" + Environment.NewLine);
-
-            // Obtener el texto del editor
-            var fuente = CodigoFuente.DesdeTexto(txtEditor.Text);
-            var analizador = new AnalizadorLexico();
-            var resultado = analizador.Analizar(fuente);
-
-            // Mostrar tokens en txtTokens
-            foreach (var token in resultado.Tokens)
+            try
             {
-                txtTokens.AppendText($"Token: {token.Tipo} | Lexema: {token.Lexema} | Línea: {token.Linea}" + Environment.NewLine);
-            }
+                // 1. Limpiar resultados anteriores
+                txtTokens.Clear();
+                txtEstatus.Clear();
 
-            // Mostrar avisos en txtEstatus
-            foreach (var aviso in resultado.Avisos)
-            {
-                txtEstatus.AppendText(aviso + Environment.NewLine);
+                // 2. Obtener el código fuente del editor
+                var fuente = CodigoFuente.DesdeTexto(txtEditor.Text);
+
+                // 3. Ejecutar el analizador léxico
+                var analizador = new AnalizadorLexico();
+                var resultado = analizador.Analizar(fuente);
+
+                // 4. Mostrar avisos en txtEstatus
+                foreach (var aviso in resultado.Avisos)
+                    txtEstatus.AppendText(aviso + Environment.NewLine);
+
+                // 5. Agrupar tokens por número de línea y mostrarlos
+                //    Formato: [numLinea] [tok1] [tok2] ...
+                var porLinea = new SortedDictionary<int, System.Collections.Generic.List<int>>();
+                foreach (var token in resultado.Tokens)
+                {
+                    if (!porLinea.ContainsKey(token.Linea))
+                        porLinea[token.Linea] = new System.Collections.Generic.List<int>();
+                    porLinea[token.Linea].Add(token.Tipo);
+                }
+
+                foreach (var kvp in porLinea)
+                {
+                    var sb = new System.Text.StringBuilder();
+                    sb.Append($"[{kvp.Key}]");
+                    foreach (int tipo in kvp.Value)
+                        sb.Append($" [{tipo}]");
+                    txtTokens.AppendText(sb.ToString() + Environment.NewLine);
+                }
+
+                txtTokens.AppendText(Environment.NewLine);
+                txtTokens.AppendText($"Total de tokens: {resultado.Tokens.Count}" + Environment.NewLine);
+
+                txtEstatus.AppendText($"Compilación exitosa. Tokens encontrados: {resultado.Tokens.Count}" + Environment.NewLine);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string ObtenerNombreTipo(int tipo)
+        {
+            switch (tipo)
+            {
+                case Token.ID: return "ID";
+                case Token.VAR: return "VAR";
+                case Token.INT: return "INT";
+                case Token.FLOAT_KW: return "FLOAT";
+                case Token.IF: return "IF";
+                case Token.THEN: return "THEN";
+                case Token.ELSE: return "ELSE";
+                case Token.WHILE: return "WHILE";
+                case Token.PRINT: return "PRINT";
+                case Token.NUM_INT: return "NUM_INT";
+                case Token.NUM_REAL: return "NUM_REAL";
+                case Token.SEMICOLON: return "SEMICOLON";
+                case Token.ASSIGN: return "ASSIGN";
+                case Token.EQ: return "EQ";
+                case Token.DIVIDE: return "DIVIDE";
+                case Token.PLUS: return "PLUS";
+                case Token.MINUS: return "MINUS";
+                case Token.MULTIPLY: return "MULTIPLY";
+                case Token.GT: return "GT";
+                case Token.GTE: return "GTE";
+                case Token.LT: return "LT";
+                case Token.LTE: return "LTE";
+                case Token.COLON: return "COLON";
+                case Token.LPAREN: return "LPAREN";
+                case Token.RPAREN: return "RPAREN";
+                case Token.LBRACE: return "LBRACE";
+                case Token.RBRACE: return "RBRACE";
+                case Token.COMMA: return "COMMA";
+                case Token.QUOTE: return "QUOTE";
+                case Token.COMMENT: return "COMMENT";
+                default: return tipo >= 500 ? "ERROR" : "DESCONOCIDO";
+            }
+        }
+
+        private void txtTokens_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

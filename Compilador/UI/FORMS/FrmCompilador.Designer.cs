@@ -152,6 +152,7 @@
             txtTokens.Size = new Size(187, 412);
             txtTokens.TabIndex = 0;
             txtTokens.Text = "Listado de tokens";
+            txtTokens.TextChanged += txtTokens_TextChanged;
             // 
             // splitBottom
             // 

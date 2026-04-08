@@ -27,12 +27,10 @@ namespace Compilador.UI.FORMS
 
         public int NumeroLineas => _lineas.Count;
 
-        // Índice 1-base: 1,2,3...
         public string ObtenerLinea(int numeroLinea)
         {
             if (numeroLinea < 1 || numeroLinea > _lineas.Count)
                 throw new ArgumentOutOfRangeException(nameof(numeroLinea));
-
             return _lineas[numeroLinea - 1];
         }
 
