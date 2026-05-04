@@ -18,6 +18,7 @@ namespace Compilador.UI.FORMS
             { "ELSE",   Token.ELSE     },   // 107
             { "WHILE",  Token.WHILE    },   // 108
             { "PRINT",  Token.PRINT    },   // 109
+            { "PROGRAM", Token.PROGRAM },   // 120
         };
 
         public int ObtenerToken(string lexema)

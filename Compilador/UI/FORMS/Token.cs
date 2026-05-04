@@ -43,6 +43,7 @@ namespace Compilador.UI.FORMS
 
         // Comentario de una linea
         public const int COMMENT = 318;  // //
+        public const int PROGRAM = 120;
 
         // Errores (500+)
         public const int ERROR = 500;

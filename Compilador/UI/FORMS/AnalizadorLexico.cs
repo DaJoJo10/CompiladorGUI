@@ -41,7 +41,6 @@ namespace Compilador.UI.FORMS
             int estado = 0;
             var lexema = new StringBuilder();
 
-            // Agrega espacio al final para forzar cierre del ultimo lexema
             string linea = (lineaOriginal ?? string.Empty) + " ";
 
             for (int i = 0; i < linea.Length; i++)
@@ -50,19 +49,19 @@ namespace Compilador.UI.FORMS
                 int columna = _matriz.ObtenerColumna(c);
                 int valor = _matriz.SiguienteEstado(estado, columna);
 
-                // ── Estado 0: ignorar / reset ────────────────────────────────
+                // ── RESET ─────────────────────────────
                 if (valor == 0)
                 {
                     estado = 0;
                     lexema.Clear();
                 }
-                // ── Estados intermedios (acumular) ───────────────────────────
+                // ── ACUMULAR ─────────────────────────
                 else if (valor < 100)
                 {
                     estado = valor;
                     lexema.Append(c);
                 }
-                // ── Aceptacion ID / palabra reservada (con retroceso) ────────
+                // ── ID / PALABRA RESERVADA ──────────
                 else if (valor == 100)
                 {
                     string lex = lexema.ToString();
@@ -71,7 +70,7 @@ namespace Compilador.UI.FORMS
                     estado = 0;
                     i--;
                 }
-                // ── Aceptacion NUM_INT (con retroceso) ───────────────────────
+                // ── ENTERO ───────────────────────────
                 else if (valor == 200)
                 {
                     string lex = lexema.ToString();
@@ -80,7 +79,7 @@ namespace Compilador.UI.FORMS
                     estado = 0;
                     i--;
                 }
-                // ── Aceptacion NUM_REAL (con retroceso) ──────────────────────
+                // ── REAL ─────────────────────────────
                 else if (valor == 201)
                 {
                     string lex = lexema.ToString();
@@ -89,26 +88,28 @@ namespace Compilador.UI.FORMS
                     estado = 0;
                     i--;
                 }
-                // ── Simbolos simples (sin retroceso) ─────────────────────────
+                // ── SIMBOLOS (CORRECCIÓN CLAVE) ─────
                 else if (valor >= 300 && valor <= 399)
                 {
-                    // Si habia lexema acumulado, emitirlo primero
+                    // 🔥 emitir lexema previo si existe
                     if (lexema.Length > 0)
                     {
                         string lex = lexema.ToString();
                         EmitirToken(_palabrasReservadas.ObtenerToken(lex), lex, numLinea, resultado);
                         lexema.Clear();
                     }
+
+                    // 🔥 emitir símbolo directamente (incluye '.')
                     EmitirToken(valor, c.ToString(), numLinea, resultado);
+
                     estado = 0;
                 }
-                // ── Inicio de posible '==' ───────────────────────────────────
+                // ── == ──────────────────────────────
                 else if (valor == 400)
                 {
-                    // Mirar el siguiente caracter
                     if (i + 1 < linea.Length && linea[i + 1] == '=')
                     {
-                        i++; // consumir el segundo '='
+                        i++;
                         EmitirToken(Token.EQ, "==", numLinea, resultado);
                     }
                     else
@@ -118,7 +119,7 @@ namespace Compilador.UI.FORMS
                     lexema.Clear();
                     estado = 0;
                 }
-                // ── Inicio de posible '>=' ───────────────────────────────────
+                // ── >= ──────────────────────────────
                 else if (valor == 401)
                 {
                     if (i + 1 < linea.Length && linea[i + 1] == '=')
@@ -133,7 +134,7 @@ namespace Compilador.UI.FORMS
                     lexema.Clear();
                     estado = 0;
                 }
-                // ── Inicio de posible '<=' ───────────────────────────────────
+                // ── <= ──────────────────────────────
                 else if (valor == 402)
                 {
                     if (i + 1 < linea.Length && linea[i + 1] == '=')
@@ -148,12 +149,11 @@ namespace Compilador.UI.FORMS
                     lexema.Clear();
                     estado = 0;
                 }
-                // ── Inicio de posible '//' (comentario) ─────────────────────
+                // ── // ──────────────────────────────
                 else if (valor == 403)
                 {
                     if (i + 1 < linea.Length && linea[i + 1] == '/')
                     {
-                        // Es un comentario: ignorar el resto de la linea
                         break;
                     }
                     else
@@ -163,7 +163,7 @@ namespace Compilador.UI.FORMS
                     lexema.Clear();
                     estado = 0;
                 }
-                // ── Errores lexicos ──────────────────────────────────────────
+                // ── ERROR ───────────────────────────
                 else if (valor >= 500)
                 {
                     resultado.AgregarAviso(
