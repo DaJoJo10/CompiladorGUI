@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Compilador.UI.FORMS
 {
@@ -21,22 +18,21 @@ namespace Compilador.UI.FORMS
         public ResultadoLexico Analizar(CodigoFuente fuente)
         {
             var resultado = new ResultadoLexico();
-            resultado.AgregarAviso("LÉXICO INICIADO");
+            resultado.AgregarAviso("LEXICO INICIADO");
 
             try
             {
                 for (int numLinea = 1; numLinea <= fuente.NumeroLineas; numLinea++)
-                {
                     ProcesarLinea(fuente.ObtenerLinea(numLinea), numLinea, resultado);
-                }
 
-                resultado.AgregarAviso("LÉXICO FINALIZADO EXITOSAMENTE");
+                resultado.AgregarAviso("LEXICO FINALIZADO EXITOSAMENTE");
             }
             catch (Exception ex)
             {
-                resultado.AgregarAviso("ERROR GRAVE EN LÉXICO: " + ex.Message);
+                resultado.AgregarAviso("ERROR GRAVE EN LEXICO: " + ex.Message);
             }
 
+            resultado.Tokens.Add(new Token(999, "EOF", fuente.NumeroLineas));
             return resultado;
         }
 
@@ -45,70 +41,142 @@ namespace Compilador.UI.FORMS
             int estado = 0;
             var lexema = new StringBuilder();
 
+            // Agrega espacio al final para forzar cierre del ultimo lexema
             string linea = (lineaOriginal ?? string.Empty) + " ";
 
             for (int i = 0; i < linea.Length; i++)
             {
                 char c = linea[i];
                 int columna = _matriz.ObtenerColumna(c);
-                int valorMatriz = _matriz.SiguienteEstado(estado, columna);
+                int valor = _matriz.SiguienteEstado(estado, columna);
 
-                if (valorMatriz == 0)
+                // ── Estado 0: ignorar / reset ────────────────────────────────
+                if (valor == 0)
                 {
-                    estado = 0; lexema.Clear();
+                    estado = 0;
+                    lexema.Clear();
                 }
-                else if (valorMatriz < 100)
+                // ── Estados intermedios (acumular) ───────────────────────────
+                else if (valor < 100)
                 {
-                    // Estado intermedio: seguir acumulando
-                    estado = valorMatriz;
+                    estado = valor;
                     lexema.Append(c);
                 }
-                else if (valorMatriz == 100)
+                // ── Aceptacion ID / palabra reservada (con retroceso) ────────
+                else if (valor == 100)
                 {
-                    // Aceptar ID / Palabra reservada
                     string lex = lexema.ToString();
-                    int token = _palabrasReservadas.ObtenerToken(lex);
-                    resultado.Tokens.Add(new Token(token, lex, numLinea));
-                    Console.WriteLine($"Token: {token} | Lexema: {lex} | Línea: {numLinea}");
-                    lexema.Clear(); estado = 0;
-                    i--; // reprocesar el carácter que terminó el lexema
-                }
-                else if (valorMatriz == 200)
-                {
-                    // Aceptar número ENTERO
-                    string lex = lexema.ToString();
-                    resultado.Tokens.Add(new Token(200, lex, numLinea));
-                    Console.WriteLine($"Token: 200 | Lexema: {lex} | Línea: {numLinea}");
-                    lexema.Clear(); estado = 0;
+                    EmitirToken(_palabrasReservadas.ObtenerToken(lex), lex, numLinea, resultado);
+                    lexema.Clear();
+                    estado = 0;
                     i--;
                 }
-                else if (valorMatriz == 201)
+                // ── Aceptacion NUM_INT (con retroceso) ───────────────────────
+                else if (valor == 200)
                 {
-                    // Aceptar número REAL
                     string lex = lexema.ToString();
-                    resultado.Tokens.Add(new Token(201, lex, numLinea));
-                    Console.WriteLine($"Token: 201 | Lexema: {lex} | Línea: {numLinea}");
-                    lexema.Clear(); estado = 0;
+                    EmitirToken(Token.NUM_INT, lex, numLinea, resultado);
+                    lexema.Clear();
+                    estado = 0;
                     i--;
                 }
-                else if (valorMatriz == 399)
+                // ── Aceptacion NUM_REAL (con retroceso) ──────────────────────
+                else if (valor == 201)
                 {
-                    // Aceptar SÍMBOLO de un solo carácter (desde estado 0)
-                    int token = _matriz.ObtenerTokenSimbolo(c);
-                    resultado.Tokens.Add(new Token(token, c.ToString(), numLinea));
-                    Console.WriteLine($"Token: {token} | Lexema: {c} | Línea: {numLinea}");
-                    estado = 0; lexema.Clear();
+                    string lex = lexema.ToString();
+                    EmitirToken(Token.NUM_REAL, lex, numLinea, resultado);
+                    lexema.Clear();
+                    estado = 0;
+                    i--;
                 }
-                else if (valorMatriz > 500)
+                // ── Simbolos simples (sin retroceso) ─────────────────────────
+                else if (valor >= 300 && valor <= 399)
                 {
-                    string msg = $"ERROR: En línea [{numLinea}] símbolo no reconocido: '{c}'";
-                    resultado.AgregarAviso(msg);
-                    Console.WriteLine(msg);
-                    estado = 0; lexema.Clear();
+                    // Si habia lexema acumulado, emitirlo primero
+                    if (lexema.Length > 0)
+                    {
+                        string lex = lexema.ToString();
+                        EmitirToken(_palabrasReservadas.ObtenerToken(lex), lex, numLinea, resultado);
+                        lexema.Clear();
+                    }
+                    EmitirToken(valor, c.ToString(), numLinea, resultado);
+                    estado = 0;
+                }
+                // ── Inicio de posible '==' ───────────────────────────────────
+                else if (valor == 400)
+                {
+                    // Mirar el siguiente caracter
+                    if (i + 1 < linea.Length && linea[i + 1] == '=')
+                    {
+                        i++; // consumir el segundo '='
+                        EmitirToken(Token.EQ, "==", numLinea, resultado);
+                    }
+                    else
+                    {
+                        EmitirToken(Token.ASSIGN, "=", numLinea, resultado);
+                    }
+                    lexema.Clear();
+                    estado = 0;
+                }
+                // ── Inicio de posible '>=' ───────────────────────────────────
+                else if (valor == 401)
+                {
+                    if (i + 1 < linea.Length && linea[i + 1] == '=')
+                    {
+                        i++;
+                        EmitirToken(Token.GTE, ">=", numLinea, resultado);
+                    }
+                    else
+                    {
+                        EmitirToken(Token.GT, ">", numLinea, resultado);
+                    }
+                    lexema.Clear();
+                    estado = 0;
+                }
+                // ── Inicio de posible '<=' ───────────────────────────────────
+                else if (valor == 402)
+                {
+                    if (i + 1 < linea.Length && linea[i + 1] == '=')
+                    {
+                        i++;
+                        EmitirToken(Token.LTE, "<=", numLinea, resultado);
+                    }
+                    else
+                    {
+                        EmitirToken(Token.LT, "<", numLinea, resultado);
+                    }
+                    lexema.Clear();
+                    estado = 0;
+                }
+                // ── Inicio de posible '//' (comentario) ─────────────────────
+                else if (valor == 403)
+                {
+                    if (i + 1 < linea.Length && linea[i + 1] == '/')
+                    {
+                        // Es un comentario: ignorar el resto de la linea
+                        break;
+                    }
+                    else
+                    {
+                        EmitirToken(Token.DIVIDE, "/", numLinea, resultado);
+                    }
+                    lexema.Clear();
+                    estado = 0;
+                }
+                // ── Errores lexicos ──────────────────────────────────────────
+                else if (valor >= 500)
+                {
+                    resultado.AgregarAviso(
+                        $"ERROR LEXICO [linea {numLinea}]: caracter no reconocido '{c}'");
+                    estado = 0;
+                    lexema.Clear();
                 }
             }
         }
 
+        private void EmitirToken(int tipo, string lex, int linea, ResultadoLexico resultado)
+        {
+            resultado.Tokens.Add(new Token(tipo, lex, linea));
+        }
     }
-
 }
