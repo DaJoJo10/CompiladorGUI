@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Compilador")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13ba534f129e7938a75e4c03ddbd9c2bebf9f82c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee8d74dac0d492c53715d3b273adce8743a365b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Compilador")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Compilador")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

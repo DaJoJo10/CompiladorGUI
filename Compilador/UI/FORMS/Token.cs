@@ -14,6 +14,9 @@ namespace Compilador.UI.FORMS
         public const int ELSE = 107;
         public const int WHILE = 108;
         public const int PRINT = 109;
+        public const int BEGIN = 111;
+        public const int END = 112;
+        public const int PROGRAM = 120;
 
         // Numeros (200-299)
         public const int NUM_INT = 200;
@@ -43,7 +46,7 @@ namespace Compilador.UI.FORMS
 
         // Comentario de una linea
         public const int COMMENT = 318;  // //
-        public const int PROGRAM = 120;
+
 
         // Errores (500+)
         public const int ERROR = 500;

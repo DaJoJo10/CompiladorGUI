@@ -91,7 +91,7 @@ namespace Compilador.UI.FORMS
                 // ── SIMBOLOS (CORRECCIÓN CLAVE) ─────
                 else if (valor >= 300 && valor <= 399)
                 {
-                    // 🔥 emitir lexema previo si existe
+                    // 🔥 IMPORTANTE: emitir lo acumulado antes
                     if (lexema.Length > 0)
                     {
                         string lex = lexema.ToString();
@@ -99,7 +99,7 @@ namespace Compilador.UI.FORMS
                         lexema.Clear();
                     }
 
-                    // 🔥 emitir símbolo directamente (incluye '.')
+                    // 🔥 emitir símbolo
                     EmitirToken(valor, c.ToString(), numLinea, resultado);
 
                     estado = 0;
