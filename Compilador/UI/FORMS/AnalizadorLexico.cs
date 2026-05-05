@@ -46,6 +46,15 @@ namespace Compilador.UI.FORMS
             for (int i = 0; i < linea.Length; i++)
             {
                 char c = linea[i];
+
+                // 🔥 SOPORTE PARA := (ACTIVIDAD 15)
+                if (c == ':' && i + 1 < linea.Length && linea[i + 1] == '=')
+                {
+                    EmitirToken(Token.ASSIGN, ":=", numLinea, resultado);
+                    i++; // saltar '='
+                    continue;
+                }
+
                 int columna = _matriz.ObtenerColumna(c);
                 int valor = _matriz.SiguienteEstado(estado, columna);
 
@@ -88,10 +97,9 @@ namespace Compilador.UI.FORMS
                     estado = 0;
                     i--;
                 }
-                // ── SIMBOLOS (CORRECCIÓN CLAVE) ─────
+                // ── SIMBOLOS ─────────────────────────
                 else if (valor >= 300 && valor <= 399)
                 {
-                    // 🔥 IMPORTANTE: emitir lo acumulado antes
                     if (lexema.Length > 0)
                     {
                         string lex = lexema.ToString();
@@ -99,7 +107,6 @@ namespace Compilador.UI.FORMS
                         lexema.Clear();
                     }
 
-                    // 🔥 emitir símbolo
                     EmitirToken(valor, c.ToString(), numLinea, resultado);
 
                     estado = 0;

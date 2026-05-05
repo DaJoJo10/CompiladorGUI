@@ -19,9 +19,11 @@ namespace Compilador.UI.FORMS
             { "WHILE",  Token.WHILE    },   // 108
             { "PRINT",  Token.PRINT    },   // 109
             { "PROGRAM", Token.PROGRAM },   // 120
-            { "BEGIN", Token.BEGIN },
-            { "END", Token.END },
-
+            { "BEGIN", Token.BEGIN },       // 111
+            { "END", Token.END },           // 112
+            { "DO", Token.DO },             // 113
+            { "WRITE", Token.WRITE },       // 114
+            { "PROCEDURE", Token.PROCEDURE } // 115
         };
 
         public int ObtenerToken(string lexema)
