@@ -20,6 +20,7 @@ namespace Compilador.UI.FORMS
         public const int DO = 113;
         public const int WRITE = 114;
         public const int PROCEDURE = 115;
+        public const int WRITELN = 116;
 
         // Numeros (200-299)
         public const int NUM_INT = 200;

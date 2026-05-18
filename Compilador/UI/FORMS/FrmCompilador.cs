@@ -141,6 +141,8 @@ namespace Compilador.UI.Forms
                 txtEditor.Clear();
                 txtTokens.Clear();
                 txtEstatus.Clear();
+                gridSimbolos.Columns.Clear();
+                gridSimbolos.Rows.Clear();
             }
             catch (Exception ex)
             {
@@ -233,6 +235,25 @@ namespace Compilador.UI.Forms
                     }
                 }
 
+                txtEstatus.AppendText("Fase 3 [Semántico] INICIADO" + Environment.NewLine);
+
+                var semantico = new AnalizadorSemantico();
+                semantico.Analizar(resultado.Tokens);
+
+                MostrarTablaSimbolos(semantico.TablaSimbolos);
+
+                if (semantico.Errores.Count == 0)
+                {
+                    txtEstatus.AppendText("Análisis Semántico finalizado con éxito" + Environment.NewLine);
+                }
+                else
+                {
+                    foreach (var error in semantico.Errores)
+                    {
+                        txtEstatus.AppendText(error + Environment.NewLine);
+                    }
+                }
+
                 // 5. Agrupar tokens por número de línea y mostrarlos
                 //    Formato: [numLinea] [tok1] [tok2] ...
                 var porLinea = new SortedDictionary<int, System.Collections.Generic.List<int>>();
@@ -299,6 +320,23 @@ namespace Compilador.UI.Forms
                 case Token.COMMENT: return "COMMENT";
                 default: return tipo >= 500 ? "ERROR" : "DESCONOCIDO";
             }
+        }
+
+        private void MostrarTablaSimbolos(List<Simbolo> tabla)
+        {
+            gridSimbolos.Columns.Clear();
+            gridSimbolos.Rows.Clear();
+
+            gridSimbolos.Columns.Add("Nombre", "Nombre");
+            gridSimbolos.Columns.Add("Tipo", "Tipo");
+            gridSimbolos.Columns.Add("Linea", "Línea");
+
+            foreach (var simbolo in tabla)
+            {
+                gridSimbolos.Rows.Add(simbolo.Nombre, simbolo.TipoDato, simbolo.LineaDeclaracion);
+            }
+
+            gridSimbolos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         private void txtTokens_TextChanged(object sender, EventArgs e)

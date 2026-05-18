@@ -29,6 +29,11 @@ namespace Compilador.UI.FORMS
         private const int TKN_DO = 113;
         private const int TKN_WRITE = 114;
         private const int TKN_PROCEDURE = 115;
+        private const int TKN_WRITELN = 116;
+        private const int TKN_PRINT = 109;
+        private const int TKN_ENTERO = 200;
+        private const int TKN_REAL = 201;
+        private const int TKN_COMENTARIO = 400;
         private const int TKN_EOF = 999;
 
         public void Parse(List<Token> tokensTotales)
@@ -87,6 +92,11 @@ namespace Compilador.UI.FORMS
                 throw new Exception($"Error sintáctico en línea {_tokenActual.Linea}: {mensajeError}. Encontrado '{_tokenActual.Lexema}'");
         }
 
+        private bool CheckLexema(string lexemaEsperado)
+        {
+            return _tokenActual.Lexema.Equals(lexemaEsperado, StringComparison.OrdinalIgnoreCase);
+        }
+
         private void ParserPrograma()
         {
             MatchTipo(TKN_PROGRAM, "Se esperaba 'PROGRAM'");
@@ -132,24 +142,32 @@ namespace Compilador.UI.FORMS
 
         private void ParserTipo()
         {
-            if (_tokenActual.Tipo == TKN_INT || _tokenActual.Tipo == TKN_FLOAT)
+            if (_tokenActual.Tipo == TKN_INT)
+            {
                 Avanzar();
+            }
+            else if (_tokenActual.Tipo == TKN_FLOAT)
+            {
+                Avanzar();
+            }
             else
-                throw new Exception($"Error en línea {_tokenActual.Linea}: tipo inválido");
+            {
+                throw new Exception($"Error sintáctico en línea {_tokenActual.Linea}: Se esperaba un tipo de dato válido (INT o FLOAT).");
+            }
         }
 
         private void ParserInstrucciones()
         {
             ParserInstruccion();
 
-            while (_tokenActual.Lexema == ";")
+            while (CheckLexema(";"))
             {
                 Avanzar();
 
-                if (_tokenActual.Tipo == TKN_END)
-                    return;
-
-                ParserInstruccion();
+                if (_tokenActual.Tipo != TKN_END)
+                {
+                    ParserInstruccion();
+                }
             }
         }
 
@@ -195,21 +213,21 @@ namespace Compilador.UI.FORMS
                 MatchTipo(TKN_END, "Se esperaba END");
             }
 
-            // 🔹 WRITE
-            else if (_tokenActual.Tipo == TKN_WRITE)
+            // 🔹 Imprimir (WRITE / WRITELN / PRINT)
+            else if (_tokenActual.Tipo == TKN_WRITE || _tokenActual.Tipo == TKN_WRITELN || _tokenActual.Tipo == TKN_PRINT)
             {
                 Avanzar();
-                MatchLexema("(", "Falta '('");
+                MatchLexema("(", "Falta '(' para función de impresión");
 
                 ParserExpresion();
 
-                while (_tokenActual.Lexema == ",")
+                while (CheckLexema(","))
                 {
                     Avanzar();
                     ParserExpresion();
                 }
 
-                MatchLexema(")", "Falta ')'");
+                MatchLexema(")", "Falta ')' en la función de impresión");
             }
 
             else
@@ -222,7 +240,7 @@ namespace Compilador.UI.FORMS
         {
             ParserTermino();
 
-            while (_tokenActual.Lexema == "+" || _tokenActual.Lexema == "-")
+            while (CheckLexema("+") || CheckLexema("-") || CheckLexema("==") || CheckLexema(">") || CheckLexema("<") || CheckLexema(">=") || CheckLexema("<=") || CheckLexema("<>"))
             {
                 Avanzar();
                 ParserTermino();
@@ -233,7 +251,7 @@ namespace Compilador.UI.FORMS
         {
             ParserFactor();
 
-            while (_tokenActual.Lexema == "*" || _tokenActual.Lexema == "/")
+            while (CheckLexema("*") || CheckLexema("/"))
             {
                 Avanzar();
                 ParserFactor();
@@ -242,34 +260,46 @@ namespace Compilador.UI.FORMS
 
         private void ParserFactor()
         {
-            if (_tokenActual.Tipo == TKN_ID ||
-                _tokenActual.Tipo == Token.NUM_INT ||
-                _tokenActual.Tipo == Token.NUM_REAL)
+            if (_tokenActual.Tipo == TKN_ID)
             {
                 Avanzar();
             }
-            else if (_tokenActual.Lexema == "(")
+            else if (_tokenActual.Tipo == TKN_ENTERO || _tokenActual.Tipo == TKN_REAL)
+            {
+                Avanzar();
+            }
+            else if (CheckLexema("("))
             {
                 Avanzar();
                 ParserExpresion();
-                MatchLexema(")", "Falta ')'");
+                MatchLexema(")", "Se esperaba ')' tras expresión");
             }
             else
             {
-                throw new Exception($"Error en línea {_tokenActual.Linea}: factor inválido");
+                throw new Exception($"Error sintáctico en línea {_tokenActual.Linea}: Se esperaba un FACTOR (Identificador, Número o '('), pero se encontró '{_tokenActual.Lexema}'.");
             }
         }
 
         private void ParserDeclaracionProcedimiento()
         {
-            MatchTipo(TKN_PROCEDURE, "Se esperaba PROCEDURE");
-            MatchTipo(TKN_ID, "Se esperaba nombre");
+            MatchTipo(TKN_PROCEDURE, "Se esperaba 'PROCEDURE'");
+            MatchTipo(TKN_ID, "Se esperaba nombre del procedimiento");
 
-            MatchLexema(";", "Falta ';'");
+            if (CheckLexema("("))
+            {
+                Avanzar();
+                if (_tokenActual.Tipo == TKN_ID)
+                {
+                    MatchTipo(TKN_ID, "Identificador de parámetro");
+                    MatchLexema(":", "Falta ':'");
+                    ParserTipo();
+                }
+                MatchLexema(")", "Falta ')'");
+            }
+            MatchLexema(";", "Falta ';' después de cabecera de procedimiento");
 
             ParserBloque();
-
-            MatchLexema(";", "Falta ';'");
+            MatchLexema(";", "Falta ';' después de cuerpo de procedimiento");
         }
     }
 }

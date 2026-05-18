@@ -23,7 +23,8 @@ namespace Compilador.UI.FORMS
             { "END", Token.END },           // 112
             { "DO", Token.DO },             // 113
             { "WRITE", Token.WRITE },       // 114
-            { "PROCEDURE", Token.PROCEDURE } // 115
+            { "PROCEDURE", Token.PROCEDURE }, // 115
+            { "WRITELN", Token.WRITELN }     // 116
         };
 
         public int ObtenerToken(string lexema)
